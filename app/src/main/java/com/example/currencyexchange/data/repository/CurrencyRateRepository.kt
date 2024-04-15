@@ -1,12 +1,13 @@
 package com.example.currencyexchange.data.repository
 
+import com.example.currencyexchange.core.Resource
 import com.example.currencyexchange.domain.model.RateEntity
 
 interface CurrencyRateRepository {
 
-    fun getDefaultCurrenciesRate() : List<RateEntity>
+    suspend fun getDefaultCurrenciesRate() : Resource<List<RateEntity>>
 
-    fun getRelativeCurrenciesRate(baseCurrency: String) : List<RateEntity>
+    fun getRelativeCurrenciesRate(baseCurrency: String) : Resource<List<RateEntity>>
 
-    fun getSingleCurrencyRate(baseCurrency: String, targetCurrency: String) : RateEntity
+    fun getSingleCurrencyRate(baseCurrency: String, targetCurrency: String) : Resource<RateEntity>
 }

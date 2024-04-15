@@ -19,6 +19,17 @@ class Resource<T> private constructor(
 
     fun failureValue(): Failure = failureValue!!
 
+
+    fun onSuccessWithValue(action: (successValue: T) -> Unit): Resource<T> {
+        if (isSuccess()) successValue?.let { action.invoke(it) }
+        return this
+    }
+
+    fun onFailureWithValue(action: (failureValue: Failure) -> Unit): Resource<T> {
+        if (!isSuccess()) failureValue?.let { action.invoke(it) }
+        return this
+    }
+
     companion object {
 
         fun success(): Resource<Nothing> = Resource()

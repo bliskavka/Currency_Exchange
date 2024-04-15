@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
-import com.example.currencyexchange.data.remote.ExchangeRateDataSource
+import com.example.currencyexchange.data.remote.ExchangeRateRemoteDataSource
 import com.example.currencyexchange.ui.theme.CurrencyExchangeTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -21,15 +21,10 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
 
     @Inject
-    lateinit var dataSource: ExchangeRateDataSource
+    lateinit var dataSource: ExchangeRateRemoteDataSource
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        lifecycleScope.launch {
-            val r = dataSource.getEurExchangeRate()
-            r.successValue()
-        }
 
         setContent {
             CurrencyExchangeTheme {

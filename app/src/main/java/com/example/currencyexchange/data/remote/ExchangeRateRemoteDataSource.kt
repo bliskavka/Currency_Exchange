@@ -5,7 +5,7 @@ import com.example.currencyexchange.data.mapper.ExchangeRateModelMapper
 import com.example.currencyexchange.domain.model.RateEntity
 import javax.inject.Inject
 
-class ExchangeRateDataSource @Inject constructor(
+class ExchangeRateRemoteDataSource @Inject constructor(
     private val exchangeRateApi: ExchangeRateApi,
     private val modelMapper: ExchangeRateModelMapper
 ) {
