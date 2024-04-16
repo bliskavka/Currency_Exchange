@@ -1,19 +1,19 @@
 package com.example.currencyexchange.data.repository
 
 import com.example.currencyexchange.core.Resource
-import com.example.currencyexchange.domain.model.UserBalanceEntity
+import com.example.currencyexchange.domain.model.UserBalanceModel
 
 interface UserBalanceRepository {
 
-    suspend fun getAllBalances() : Resource<List<UserBalanceEntity>>
+    suspend fun getAllBalances() : Resource<List<UserBalanceModel>>
 
-    suspend fun getBaseBalance() : Resource<UserBalanceEntity>
+    suspend fun getBaseBalance() : Resource<UserBalanceModel>
 
-    suspend fun getBalanceByCode(currencyCode: String) : Resource<UserBalanceEntity>
+    suspend fun getBalanceByCode(currencyCode: String) : Resource<UserBalanceModel>
 
-    suspend fun createNewBalance(currencyCode: String, amount: Float)
+    suspend fun createNewBalance(userBalanceModel: UserBalanceModel)
 
-    suspend fun changeBalanceAmount(currencyCode: String, amount: Float)
+    suspend fun changeBalanceAmount(userBalanceModel: UserBalanceModel)
 
-    suspend fun deleteBalance(currencyCode: String)
+    suspend fun deleteBalance(userBalanceModel: UserBalanceModel)
 }

@@ -3,12 +3,21 @@ package com.example.currencyexchange.ui.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.currencyexchange.domain.usecase.GetUserBalancesCodesUseCase
 import com.example.currencyexchange.ui.viewmodel.ConvertScreenAction.*
 import com.example.currencyexchange.ui.viewmodel.ConvertScreenEvent.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ConvertViewModel : ViewModel() {
+@HiltViewModel
+class ConvertViewModel @Inject constructor(
+    val getUserBalancesCodesUseCase: GetUserBalancesCodesUseCase,
+) : ViewModel() {
 
     private val stateMutable = MutableStateFlow(getDefaultState())
     val state: StateFlow<ConvertScreenState> = stateMutable
@@ -21,8 +30,14 @@ class ConvertViewModel : ViewModel() {
             is OnBackButtonClicked -> actionMutable.value = CloseScreen
             is OnFromAmountEntered -> TODO()
             is OnFromCurrencyCodeClicked -> TODO()
-            is OnScreenOpened -> TODO()
-            is OnSubmitButtonClicked ->   actionMutable.value = CloseScreenWithResult(ConvertResult.SUBMITTED)
+            is OnScreenOpened -> {
+                viewModelScope.launch {
+                    stateMutable.update {
+                        it.copy(fromCurrencyList = getUserBalancesCodesUseCase())
+                    }
+                }
+            }
+            is OnSubmitButtonClicked -> actionMutable.value = CloseScreenWithResult(ConvertResult.SUBMITTED)
             is OnToAmountEntered -> TODO()
             is OnToCurrencyCodeClicked -> TODO()
         }
@@ -40,7 +55,7 @@ class ConvertViewModel : ViewModel() {
     )
 }
 
-class ConvertScreenState(
+data class ConvertScreenState(
     val fromCurrencyList: List<String>,
     val toCurrencyList: List<String>,
     val fromCurrencyRate: String,
@@ -48,21 +63,21 @@ class ConvertScreenState(
     val fromAmount: Float,
     val toAmount: Float,
     val feeBannerMessage: String,
-    val feeAmount: String
+    val feeAmount: String,
 )
 
 sealed class ConvertScreenEvent {
     data class OnScreenOpened(val isReopened: Boolean = false) : ConvertScreenEvent()
-    object OnBackButtonClicked : ConvertScreenEvent()
-    object OnSubmitButtonClicked : ConvertScreenEvent()
-    object OnFromCurrencyCodeClicked : ConvertScreenEvent()
-    object OnToCurrencyCodeClicked : ConvertScreenEvent()
+    data object OnBackButtonClicked : ConvertScreenEvent()
+    data object OnSubmitButtonClicked : ConvertScreenEvent()
+    data object OnFromCurrencyCodeClicked : ConvertScreenEvent()
+    data object OnToCurrencyCodeClicked : ConvertScreenEvent()
     data class OnFromAmountEntered(val amount: Float) : ConvertScreenEvent()
     data class OnToAmountEntered(val amount: Float) : ConvertScreenEvent()
 }
 
 sealed class ConvertScreenAction {
-    object CloseScreen : ConvertScreenAction()
+    data object CloseScreen : ConvertScreenAction()
     data class CloseScreenWithResult(val result: ConvertResult) : ConvertScreenAction()
     data class ShowMessage(val text: String) : ConvertScreenAction()
 }

@@ -1,6 +1,6 @@
 package com.example.currencyexchange.domain.model
 
-class UserBalanceEntity(
+class UserBalanceModel(
     val currencyCode: String,
     val amount: Float
 )
