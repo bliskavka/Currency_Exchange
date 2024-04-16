@@ -13,11 +13,24 @@ class CurrencyRateRepositoryImp @Inject constructor(
         return exchangeRateRemoteDataSource.getEurExchangeRate()
     }
 
-    override fun getRelativeCurrenciesRate(baseCurrency: String): Resource<List<RateEntity>>{
+    override suspend fun getRelativeCurrenciesRate(baseCurrency: String): Resource<List<RateEntity>>{
         TODO("Not yet implemented")
     }
 
-    override fun getSingleCurrencyRate(baseCurrency: String, targetCurrency: String): Resource<RateEntity> {
-        TODO("Not yet implemented")
+    override suspend fun getSingleCurrencyRate(baseCurrency: String, targetCurrency: String): Resource<RateEntity> {
+        val baseRate = exchangeRateRemoteDataSource.getEurExchangeRateByCode(baseCurrency)
+        val targetRate = exchangeRateRemoteDataSource.getEurExchangeRateByCode(targetCurrency)
+
+        return if (baseRate.isSuccess() && targetRate.isSuccess()) {
+            Resource.success(
+                RateEntity(
+                    rate = (1F / baseRate.successValue().rate) * targetRate.successValue().rate,
+                    baseNameCode = baseCurrency,
+                    nameCode = targetCurrency
+                )
+            )
+        } else {
+            baseRate
+        }
     }
 }

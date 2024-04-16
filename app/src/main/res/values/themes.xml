@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="Theme.CurrencyExchange" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.CurrencyExchange" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimaryDark">@color/background_grey</item>
+    </style>
 </resources>

@@ -7,7 +7,7 @@ interface CurrencyRateRepository {
 
     suspend fun getDefaultCurrenciesRate() : Resource<List<RateEntity>>
 
-    fun getRelativeCurrenciesRate(baseCurrency: String) : Resource<List<RateEntity>>
+    suspend fun getRelativeCurrenciesRate(baseCurrency: String) : Resource<List<RateEntity>>
 
-    fun getSingleCurrencyRate(baseCurrency: String, targetCurrency: String) : Resource<RateEntity>
+    suspend fun getSingleCurrencyRate(baseCurrency: String, targetCurrency: String) : Resource<RateEntity>
 }

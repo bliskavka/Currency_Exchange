@@ -8,14 +8,14 @@ class Resource<T> private constructor(
 ) {
 
     fun isSuccess(): Boolean {
-        return failureValue == null
+        return failureValue == null && successValue != null
     }
 
     fun isFailure(): Boolean {
         return !isSuccess()
     }
 
-    fun successValue(): T? = successValue
+    fun successValue(): T = successValue!!
 
     fun failureValue(): Failure = failureValue!!
 

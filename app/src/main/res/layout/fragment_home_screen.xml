@@ -13,11 +13,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="25dp"
+        android:text="@string/total_balance"
         android:textColor="@color/white"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Total balance" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/text_balance_currency"
@@ -48,9 +48,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
         android:layout_marginEnd="20dp"
+        android:src="@drawable/history_ic"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/history_ic" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -61,26 +61,28 @@
         app:layout_constraintTop_toBottomOf="@+id/text_balance_currency">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_buy"
+            android:id="@+id/button_convert"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
-            android:background="@drawable/button_shape"
-            android:text="Buy"
-            app:cornerRadius="20dp" />
+            android:backgroundTint="@color/white"
+            android:text="@string/convert"
+            android:textColor="@color/black"
+            app:cornerRadius="12dp" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_sell"
+            android:id="@+id/button_deposit"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="20dp"
             android:layout_weight="1"
-            android:background="@drawable/button_shape"
-            android:text="Sell"
-            app:cornerRadius="20dp" />
+            android:backgroundTint="@color/button_grey"
+            android:text="@string/deposit"
+            android:textColor="@color/white"
+            app:cornerRadius="12dp" />
     </LinearLayout>
 
     <androidx.cardview.widget.CardView
@@ -104,10 +106,10 @@
                 android:layout_marginHorizontal="20sp"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="10dp"
+                android:text="@string/my_balances"
                 android:textColor="@color/black"
                 android:textSize="22sp"
-                android:textStyle="bold"
-                tools:text="My balances" />
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/balances_recycler"
