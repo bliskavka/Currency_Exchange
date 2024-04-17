@@ -1,5 +1,6 @@
 package com.example.currencyexchange.ui.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -17,6 +19,7 @@ import com.example.currencyexchange.R
 import com.example.currencyexchange.databinding.FragmentHomeScreenBinding
 import com.example.currencyexchange.ui.adapter.BalanceEntriesAdapter
 import com.example.currencyexchange.ui.model.BalanceEntryUiModel
+import com.example.currencyexchange.ui.viewmodel.ConvertResult
 import com.example.currencyexchange.ui.viewmodel.HomeScreenAction
 import com.example.currencyexchange.ui.viewmodel.HomeScreenEvent
 import com.example.currencyexchange.ui.viewmodel.HomeScreenEvent.*
@@ -65,6 +68,10 @@ class HomeScreenFragment : Fragment() {
         viewModel.action.observe(viewLifecycleOwner) {
             when (it) {
                 is HomeScreenAction.OpenConvertDialog -> {
+                    setFragmentResultListener("convert_fragment") { _, bundle ->
+                        val result = bundle.getString("result") ?: ""
+                        sendEvent(OnScreenOpened())
+                    }
                     parentFragmentManager.commit {
                         add(R.id.host, ConvertFragment.newInstance())
                     }

@@ -9,23 +9,23 @@ class ExchangeRateRemoteDataSource @Inject constructor(
     private val exchangeRateApi: ExchangeRateApi,
     private val modelMapper: ExchangeRateModelMapper,
 ) {
+
+    private var eurExchangeRateCached = listOf<CurrencyRateModel>()
+    private var eurExchangeRateCachedTime = 0L
+
     suspend fun getEurExchangeRate(): Resource<List<CurrencyRateModel>> {
         return try {
-            val response = exchangeRateApi.getDefaultRate()
-            val model = modelMapper.fromResponse(response)
-            Resource.success(model)
+            if (isCacheExpired()) {
+                val response = exchangeRateApi.getDefaultRate()
+                val model = modelMapper.fromResponse(response)
+                eurExchangeRateCached = model
+                eurExchangeRateCachedTime = System.currentTimeMillis()
+            }
+            Resource.success(eurExchangeRateCached)
         } catch (e: Exception) {
             Resource.failure(e)
         }
     }
 
-    suspend fun getEurExchangeRateByCode(currencyCode: String): Resource<CurrencyRateModel> {
-        return try {
-            val response = exchangeRateApi.getDefaultRate() // TODO replace with dedicated endpoint
-            val model = modelMapper.fromResponse(response)
-            Resource.success(model.find { it.nameCode == currencyCode }!!)
-        } catch (e: Exception) {
-            Resource.failure(e)
-        }
-    }
+    private fun isCacheExpired() = System.currentTimeMillis() - eurExchangeRateCachedTime > 5000
 }

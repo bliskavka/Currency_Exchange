@@ -60,7 +60,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="20dp"
                 android:ems="10"
-                android:inputType="numberSigned"
+                android:inputType="numberDecimal"
                 android:textColor="@color/black"
                 android:textSize="30sp"
                 android:textStyle="bold"
@@ -121,7 +121,8 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="20dp"
                 android:ems="10"
-                android:inputType="numberSigned"
+                android:editable="false"
+                android:inputType="numberDecimal"
                 android:textColor="@color/black"
                 android:textSize="30sp"
                 android:textStyle="bold"
@@ -142,11 +143,20 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
+    <TextView
+        android:id="@+id/feeBannerText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="20dp"
+        android:textColor="@color/white"
+        tools:text="Transaction fee will be applied: 0.7%" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/submit_button"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_margin="20dp"
+        android:layout_marginHorizontal="20dp"
         android:backgroundTint="@color/button_grey"
         android:text="@string/submit"
         android:textColor="@color/white"

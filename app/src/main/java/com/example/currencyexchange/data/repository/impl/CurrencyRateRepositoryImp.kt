@@ -9,6 +9,7 @@ import javax.inject.Inject
 class CurrencyRateRepositoryImp @Inject constructor(
     private val exchangeRateRemoteDataSource: ExchangeRateRemoteDataSource
 ) : CurrencyRateRepository {
+
     override suspend fun getDefaultCurrenciesRate(): Resource<List<CurrencyRateModel>> {
         return exchangeRateRemoteDataSource.getEurExchangeRate()
     }
@@ -18,19 +19,20 @@ class CurrencyRateRepositoryImp @Inject constructor(
     }
 
     override suspend fun getSingleCurrencyRate(baseCurrency: String, targetCurrency: String): Resource<CurrencyRateModel> {
-        val baseRate = exchangeRateRemoteDataSource.getEurExchangeRateByCode(baseCurrency)
-        val targetRate = exchangeRateRemoteDataSource.getEurExchangeRateByCode(targetCurrency)
+        val eurRate = exchangeRateRemoteDataSource.getEurExchangeRate()
 
-        return if (baseRate.isSuccess() && targetRate.isSuccess()) {
+        return if (eurRate.isSuccess()) {
+            val baseRate = eurRate.successValue().find { it.nameCode == baseCurrency }?.rate ?: 0F
+            val targetRate = eurRate.successValue().find { it.nameCode == targetCurrency }?.rate ?: 0F
             Resource.success(
                 CurrencyRateModel(
-                    rate = (1F / baseRate.successValue().rate) * targetRate.successValue().rate,
+                    rate = (1F / baseRate) * targetRate,
                     baseNameCode = baseCurrency,
                     nameCode = targetCurrency
                 )
             )
         } else {
-            baseRate
+            Resource.failure(eurRate.failureValue())
         }
     }
 }

@@ -4,6 +4,8 @@ import com.example.currencyexchange.data.repository.CurrencyRateRepository
 import com.example.currencyexchange.data.repository.UserBalanceRepository
 import com.example.currencyexchange.ui.model.BalanceEntryUiModel
 import com.example.currencyexchange.ui.viewmodel.HomeScreenState
+import com.example.currencyexchange.util.CurrencyUtils
+import com.example.currencyexchange.util.CurrencyUtils.getCurrencySymbol
 import java.util.Currency
 import javax.inject.Inject
 
@@ -63,10 +65,5 @@ class GetHomeScreenDataUseCase @Inject constructor(
         } else {
             "n/a"
         }
-    }
-
-    // TODO move to utils
-    private fun getCurrencySymbol(code: String): Char {
-        return Currency.getInstance(code).symbol.first()
     }
 }
