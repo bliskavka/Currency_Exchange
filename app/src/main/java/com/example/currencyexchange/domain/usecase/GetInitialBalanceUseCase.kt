@@ -12,7 +12,7 @@ class GetInitialBalanceUseCase @Inject constructor(
         try {
             userBalanceRepository.createNewBalance(
                 UserBalanceModel(
-                    amount = 10000F,
+                    amount = 1000F,
                     currencyCode = "EUR"
                 )
             )

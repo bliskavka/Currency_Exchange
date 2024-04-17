@@ -41,7 +41,7 @@ class HomeScreenViewModel @Inject constructor(
                     val res = getInitialBalanceUseCase()
                     if (res) {
                         stateMutable.value = userBalancesUseCase()
-                        actionMutable.value = HomeScreenAction.ShowMessage("10k EUR was kindly added to your account")
+                        actionMutable.value = HomeScreenAction.ShowMessage("1k EUR was kindly added to your account")
                     } else {
                         actionMutable.value = HomeScreenAction.ShowMessage("No more money :(")
                     }

@@ -1,12 +1,15 @@
 package com.example.currencyexchange.domain.usecase
 
+import android.content.Context
 import com.example.currencyexchange.data.repository.CurrencyRateRepository
 import com.example.currencyexchange.domain.model.FeeModel
 import com.example.currencyexchange.domain.usecase.CommissionRule.*
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 class GetFeeValueUseCase @Inject constructor(
-    private val currencyRateRepository: CurrencyRateRepository
+    private val currencyRateRepository: CurrencyRateRepository,
+    @ApplicationContext private val context: Context
 ) {
     suspend operator fun invoke(amountInBaseCurrency: Float): FeeModel {
 //        val commissionRule = commissionRepository.getActiveCommissionRule() TODO implement
@@ -15,11 +18,11 @@ class GetFeeValueUseCase @Inject constructor(
 
         val commissionRule: CommissionRule = AfterConversionCount(5) // TODO hardcoded
         val fee = FeeModel(percentage = 0.7F) // TODO hardcoded
-        val conversionCount = 10 // TODO hardcoded
+        val conversionCount = context.getSharedPreferences("pref", Context.MODE_PRIVATE).getInt("count", 0) // TODO replace with repository call
 
         when (commissionRule) {
             is AfterConversionCount -> {
-                if (conversionCount > commissionRule.limit) return fee
+                if (conversionCount >= commissionRule.limit) return fee
             }
             is AmountGreater -> return fee
             is AmountLower -> return fee

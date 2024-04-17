@@ -1,15 +1,18 @@
 package com.example.currencyexchange.domain.usecase
 
+import android.content.Context
 import com.example.currencyexchange.data.repository.CurrencyRateRepository
 import com.example.currencyexchange.data.repository.UserBalanceRepository
 import com.example.currencyexchange.domain.model.UserBalanceModel
 import com.example.currencyexchange.ui.viewmodel.ConvertScreenState
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 class PerformConversionUseCase @Inject constructor(
     private val userBalanceRepository: UserBalanceRepository,
     private val getFeeValueUseCase: GetFeeValueUseCase,
-    private val currencyRateRepository: CurrencyRateRepository
+    private val currencyRateRepository: CurrencyRateRepository,
+    @ApplicationContext private val context: Context
 ) {
     suspend operator fun invoke(state: ConvertScreenState): Boolean {
         val fromBalance = userBalanceRepository.getBalanceByCode(
@@ -67,7 +70,8 @@ class PerformConversionUseCase @Inject constructor(
                 amount = baseBalance.successValue().amount - getFeeValueUseCase(fromAmountInBaseCurrency).getValue(fromAmountInBaseCurrency)
             )
         )
-
+        val prevCountValue = context.getSharedPreferences("pref", Context.MODE_PRIVATE).getInt("count", 0) // TODO replace with repository call
+        context.getSharedPreferences("pref", Context.MODE_PRIVATE).edit().putInt("count", prevCountValue + 1).apply()
         return true
     }
 }

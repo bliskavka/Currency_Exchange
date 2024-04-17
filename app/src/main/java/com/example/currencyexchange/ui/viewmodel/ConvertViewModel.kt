@@ -29,7 +29,7 @@ class ConvertViewModel @Inject constructor(
     val getRelativeCurrencyRateUseCase: GetRelativeCurrencyRateUseCase,
     val validateConversionUseCase: ValidateConversionUseCase,
     val performConversionUseCase: PerformConversionUseCase,
-    val getFeeValueUseCase: GetFeeValueUseCase
+    val getFeeValueUseCase: GetFeeValueUseCase,
 ) : ViewModel() {
 
     private val stateMutable = MutableStateFlow(getDefaultState())
@@ -110,7 +110,8 @@ class ConvertViewModel @Inject constructor(
                 viewModelScope.launch {
                     val result = validateConversionUseCase(state.value)
                     if (result.isValid) {
-                        performConversionUseCase(state.value)
+                        val convertResult = performConversionUseCase(state.value)
+                        actionMutable.value = ShowMessage(if (convertResult) "Conversion successful" else "Conversion failed")
                         actionMutable.value = CloseScreenWithResult(ConvertResult.SUBMITTED)
                     } else {
                         actionMutable.value = ShowMessage(result.errorMessage)
@@ -127,11 +128,11 @@ class ConvertViewModel @Inject constructor(
         )
     }
 
-    private suspend fun prepareFeeString(amount: Float) : String {
+    private suspend fun prepareFeeString(amount: Float): String {
         val fee = getFeeValueUseCase(amount)
         return if (fee.percentage != null && fee.percentage > 0) {
             fee.percentage.toString() + "%"
-        } else if (fee.fixedValue != null && fee.fixedValue > 0){
+        } else if (fee.fixedValue != null && fee.fixedValue > 0) {
             fee.fixedValue.toString() + "€" // TODO get base currency symbol
         } else {
             ""
