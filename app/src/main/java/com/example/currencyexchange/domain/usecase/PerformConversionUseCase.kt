@@ -18,7 +18,7 @@ class PerformConversionUseCase @Inject constructor(
         val toBalance = userBalanceRepository.getBalanceByCode(
             state.toCurrencyList[state.toSelectedItemId]
         )
-        val baseBalance = userBalanceRepository.getBaseBalance()
+        var baseBalance = userBalanceRepository.getBaseBalance()
 
         if (fromBalance.isFailure() || baseBalance.isFailure()) return false
 
@@ -34,7 +34,7 @@ class PerformConversionUseCase @Inject constructor(
             state.fromAmount / rateRes.successValue().rate
         }
 
-        // Target balance
+        // To balance
         if (toBalance.isFailure()) {
             userBalanceRepository.createNewBalance(
                 UserBalanceModel(
@@ -51,7 +51,7 @@ class PerformConversionUseCase @Inject constructor(
             )
         }
 
-        // Base balance
+        // From balance
         userBalanceRepository.changeBalanceAmount(
             UserBalanceModel(
                 currencyCode = fromBalance.successValue().currencyCode,
@@ -60,6 +60,7 @@ class PerformConversionUseCase @Inject constructor(
         )
 
         // Fee
+        baseBalance = userBalanceRepository.getBaseBalance()
         userBalanceRepository.changeBalanceAmount(
             UserBalanceModel(
                 currencyCode = baseBalance.successValue().currencyCode,

@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.currencyexchange.domain.usecase.GetHomeScreenDataUseCase
+import com.example.currencyexchange.domain.usecase.GetInitialBalanceUseCase
 import com.example.currencyexchange.ui.model.BalanceEntryUiModel
 import com.example.currencyexchange.ui.viewmodel.HomeScreenEvent.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
-    val userBalancesUseCase: GetHomeScreenDataUseCase
+    val userBalancesUseCase: GetHomeScreenDataUseCase,
+    val getInitialBalanceUseCase: GetInitialBalanceUseCase
 ) : ViewModel() {
 
     private val stateMutable = MutableStateFlow(getDefaultState())
@@ -35,12 +37,22 @@ class HomeScreenViewModel @Inject constructor(
             }
 
             is OnDepositButtonPressed -> {
+                viewModelScope.launch {
+                    val res = getInitialBalanceUseCase()
+                    if (res) {
+                        stateMutable.value = userBalancesUseCase()
+                        actionMutable.value = HomeScreenAction.ShowMessage("10k EUR was kindly added to your account")
+                    } else {
+                        actionMutable.value = HomeScreenAction.ShowMessage("No more money :(")
+                    }
+                }
             }
 
             is OnBalanceEntryPressed -> {
             }
 
             is OnHistoryButtonPressed -> {
+                actionMutable.value = HomeScreenAction.ShowMessage("Not yet implemented")
             }
         }
     }
@@ -71,15 +83,15 @@ class HomeScreenState(
 
 sealed class HomeScreenEvent {
     data class OnScreenOpened(val isReopened: Boolean = false) : HomeScreenEvent()
-    object OnConvertButtonPressed : HomeScreenEvent()
-    object OnDepositButtonPressed : HomeScreenEvent()
-    object OnHistoryButtonPressed : HomeScreenEvent()
+    data object OnConvertButtonPressed : HomeScreenEvent()
+    data object OnDepositButtonPressed : HomeScreenEvent()
+    data object OnHistoryButtonPressed : HomeScreenEvent()
     data class OnBalanceEntryPressed(val entry: BalanceEntryUiModel) : HomeScreenEvent()
 }
 
 sealed class HomeScreenAction {
-    object OpenDepositDialog : HomeScreenAction()
-    object OpenConvertDialog : HomeScreenAction()
-    object OpenHistoryFragment : HomeScreenAction()
+    data object OpenDepositDialog : HomeScreenAction()
+    data object OpenConvertDialog : HomeScreenAction()
+    data object OpenHistoryFragment : HomeScreenAction()
     data class ShowMessage(val text: String) : HomeScreenAction()
 }

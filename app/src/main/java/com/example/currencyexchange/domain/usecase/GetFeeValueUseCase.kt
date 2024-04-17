@@ -12,9 +12,10 @@ class GetFeeValueUseCase @Inject constructor(
 //        val commissionRule = commissionRepository.getActiveCommissionRule() TODO implement
 //        val fee = commissionRepository.getFeeValue() TODO implement
 //        val conversionCount = userHistoryRepository.getAllConversions().size TODO implement
-        val commissionRule: CommissionRule = AfterConversionCount(5)
-        val fee = FeeModel(percentage = 0.7F)
-        val conversionCount = 10
+
+        val commissionRule: CommissionRule = AfterConversionCount(5) // TODO hardcoded
+        val fee = FeeModel(percentage = 0.7F) // TODO hardcoded
+        val conversionCount = 10 // TODO hardcoded
 
         when (commissionRule) {
             is AfterConversionCount -> {

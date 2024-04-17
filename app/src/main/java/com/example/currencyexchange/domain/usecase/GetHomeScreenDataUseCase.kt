@@ -45,9 +45,9 @@ class GetHomeScreenDataUseCase @Inject constructor(
             return HomeScreenState(
                 balanceEntries = listOf(),
                 baseBalance = BalanceEntryUiModel(
-                    currencyCode = "",
-                    currencySymbol = ' ',
-                    balance = "",
+                    currencyCode = "EUR",
+                    currencySymbol = '€',
+                    balance = "0.0",
                     baseBalance = ""
                 ),
                 hasError = true,

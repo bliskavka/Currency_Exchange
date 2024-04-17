@@ -20,7 +20,7 @@ class UserBalanceRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getBaseBalance(): Resource<UserBalanceModel> {
-        val baseCurrencyCode = "EUR" // TODO get from shared preferences or other source
+        val baseCurrencyCode = "EUR" // TODO hardcoded, get from shared preferences or other source
         return  withContext(Dispatchers.IO) {
             return@withContext userBalanceLocalDataSource.getEntryByCode(baseCurrencyCode)
         }

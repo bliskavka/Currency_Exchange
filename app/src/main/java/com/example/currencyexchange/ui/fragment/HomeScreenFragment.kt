@@ -76,7 +76,11 @@ class HomeScreenFragment : Fragment() {
                         add(R.id.host, ConvertFragment.newInstance())
                     }
                 }
-                is HomeScreenAction.OpenDepositDialog -> {}
+
+                is HomeScreenAction.OpenDepositDialog -> {
+                    sendEvent(OnDepositButtonPressed)
+                }
+
                 is HomeScreenAction.OpenHistoryFragment -> {}
                 is HomeScreenAction.ShowMessage -> {
                     Toast.makeText(requireContext(), it.text, Toast.LENGTH_SHORT).show()
