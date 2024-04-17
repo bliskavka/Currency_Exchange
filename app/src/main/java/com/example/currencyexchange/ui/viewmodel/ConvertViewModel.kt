@@ -97,6 +97,11 @@ class ConvertViewModel @Inject constructor(
             is OnScreenOpened -> {
                 viewModelScope.launch {
                     stateMutable.update {
+                        val userBalances = getUserBalancesCodesUseCase()
+                        if (userBalances.isNullOrEmpty()) {
+                            actionMutable.value = ShowMessage("You don't have any money on your balance")
+                            actionMutable.value = CloseScreen
+                        }
                         it.copy(
                             fromCurrencyList = getUserBalancesCodesUseCase(),
                             toCurrencyList = getAvailableCurrenciesUseCase(),
